@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTIN WEB - Admin</title>
+
+    <link href="https://riclandb.riclan.com.br/cdn/css/bootstrap.css" rel="stylesheet">
+    <script>
+        /* 
+            Função para atualizar o GTIN
+        */
+        function atualizar_gtin() {
+            var button = document.getElementById('atualizar_botao');
+            button.disabled = true;
+            button.textContent = 'Atualizando...';
+
+            fetch('/atualizar_gtin', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data['mensagem'] === 'GTINs atualizados com sucesso') {
+                    alert('GTIN atualizado com sucesso!');
+                } else {
+                    alert('Falha ao atualizar o GTIN');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro interno ao atualizar o GTIN');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.textContent = 'Atualizar GTIN';
+            });
+        }
+        /* 
+            Função para limpar os GTIN
+        */
+        function limpar_gtins() {
+            var button = document.getElementById('apagar_botao');
+            button.disabled = true;
+            button.textContent = 'Limpando...';
+
+            fetch('/apagar_gtin', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data['mensagem'] === 'GTINs apagados com sucesso') {
+                    alert('GTIN limpos com sucesso!');
+                } else {
+                    alert('Falha ao limpar o GTIN');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro interno ao limpar o GTIN');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.textContent = 'Limpar GTIN';
+            });
+        }
+
+        /*
+            Função para atualizar as tabelas
+        */
+        function atualizar_tabelas() {
+            var button = document.getElementById('atualizar_tabelas_botao');
+            button.disabled = true;
+            button.textContent = 'Atualizando...';
+
+            fetch('/atualizar_tabelas', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data['mensagem'] === 'tabelas atualizadas com sucesso') {
+                    alert('Tabelas atualizadas com sucesso!');
+                } else {
+                    alert('Falha ao atualizar as tabelas');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro interno ao atualizar as tabelas');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.textContent = 'Atualizar Tabelas';
+            });
+        }
+
+        /*
+            Função para limpar as tabelas
+        */
+        function limpar_tabelas() {
+            var button = document.getElementById('apagar_tabelas_botao');
+            button.disabled = true;
+            button.textContent = 'Limpando...';
+
+            fetch('/limpar_tabelas', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data['mensagem'] === 'tabelas limpas com sucesso') {
+                    alert('Tabelas limpas com sucesso!');
+                } else {
+                    alert('Falha ao limpar as tabelas');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro interno ao limpar as tabelas');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.textContent = 'Limpar Tabelas';
+            });
+        }
+    </script>
+</head>
+<body class="d-flex flex-column h-100" style="background: #343a40 !important;">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <img width="64" src="https://riclandb.riclan.com.br/cdn/images/logoPNG.png" alt="Logo">
+                <a class="navbar-brand" style="padding-left: 15px;">GTIN Web</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/listagem">Listagem</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-shrink-0" style="padding: 60px 15px 0;">
+        <div class="p-2">
+            <h2 class="text-white">Administração</h2>
+            <div class="bg-light border border-secondary p-2 rounded">
+                <h1>Atualizar GTIN</h1>
+                <p class="lead">Atualiza todos os itens novos que ainda não tem status do GTIN.</p>
+                <button class="btn btn-lg btn-primary btn-sm" id="atualizar_botao" onclick="atualizar_gtin();">Atualizar GTIN</button>
+                <button class="btn btn-lg btn-danger btn-sm" id="apagar_botao" onclick="if (confirm('Tem certeza que deseja apagar todos os itens?')){limpar_gtins();}else{event.stopPropagation(); event.preventDefault();};">Limpar GTIN</button>
+            </div>
+
+            <div class="mt-2 bg-light border border-secondary p-2 rounded">
+                <h1>Atualizar Tabelas</h1>
+                <p class="lead">Atualiza as tabelas de EAN13 e DUN14.</p>
+                <button class="btn btn-lg btn-primary btn-sm" id="atualizar_tabelas_botao" onclick="atualizar_tabelas()">Atualizar Tabelas</button>
+                <button class="btn btn-lg btn-danger btn-sm" id="apagar_tabelas_botao" onclick="limpar_tabelas()">Limpar Tabelas</button>
+            </div>
+
+            <div class="mt-2 bg-light border border-secondary p-2 rounded">
+                <h1>Outros</h1>
+                <p class="lead">Opções avançadas.</p>
+                <a href="/testes">Testes</a>
+                <form action="/atualizar_parametros" method="get">
+                    <label for="velocidade">Velocidade das consultas</label>
+                    <input type="text" name="velocidade" placeholder="Velocidade padrão: 0">
+
+                    <button class="btn btn-lg btn-success btn-sm" type="submit">Atualizar</button>
+                </form>
+                <form action="/exportar_excel">
+                    <button class="btn btn-success btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-up"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>
+                        Exportar Excel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <div class="container">
+        <footer class="py-3 my-4">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="https://chamados.riclan.com.br/glpi" target="_blank" class="nav-link px-2" style="color: #93989d;">Chamados T.I</a></li>
+            <li class="nav-item"><a href="https://riclandb.riclan.com.br/riclan/open.do?sys=MCP" target="_blank" class="nav-link px-2" style="color: #93989d;">Central Portais</a></li>
+          </ul>
+          <p class="text-center text-white">© 2024 Gabriel</p>
+        </footer>
+      </div>
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista com Dados</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .status-9494 {
+            --bs-table-bg: red !important;
+            --bs-table-striped-bg:red !important;
+        }
+        .status-9495 {
+            --bs-table-bg: orange !important;
+            --bs-table-striped-bg:orange !important;
+        }
+    </style>
+    <script>
+        function filterTable() {
+            var ean13Checked = document.getElementById('ean13_check').checked;
+            var dun14Checked = document.getElementById('dun14_check').checked;
+            
+            var status9490Checked = document.querySelector('input[type="checkbox"][onclick="toggleStatus(\'9490\')"]').checked;
+            var status9495Checked = document.querySelector('input[type="checkbox"][onclick="toggleStatus(\'9495\')"]').checked;
+            var status9494Checked = document.querySelector('input[type="checkbox"][onclick="toggleStatus(\'9494\')"]').checked;
+            var status9492Checked = document.querySelector('input[type="checkbox"][onclick="toggleStatus(\'9492\')"]').checked;
+
+            var ean13Rows = document.querySelectorAll('.ean13_row');
+            var dun14Rows = document.querySelectorAll('.dun14_row');
+
+            ean13Rows.forEach(row => {
+                if (ean13Checked && shouldShowRow(row)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            dun14Rows.forEach(row => {
+                if (dun14Checked && shouldShowRow(row)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            function shouldShowRow(row) {
+                var status = row.className.match(/status-(\d+)/)[1];
+                switch (status) {
+                    case '9490':
+                        return status9490Checked;
+                    case '9495':
+                        return status9495Checked;
+                    case '9494':
+                        return status9494Checked;
+                    case '9492':
+                        return status9492Checked;
+                    default:
+                        return true;
+                }
+            }
+        }
+
+
+        function pesquisar_() {
+            var searchInput = document.getElementById('pesquisar').value.toLowerCase(); // Get search term and convert to lowercase
+            var tableBody = document.querySelector('table > tbody'); // Target only the tbody element
+            var rows = tableBody.querySelectorAll('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var rowText = '';
+                var cells = rows[i].querySelectorAll('td'); // Get all cells in the current row
+
+                for (var j = 0; j < cells.length; j++) {
+                    rowText += cells[j].textContent.toLowerCase(); // Combine cell text (lowercase) for searching
+                }
+
+                rows[i].style.display = rowText.includes(searchInput) ? '' : 'none'; // Show/hide based on search term match
+            }
+        }
+
+        function toggleStatus(statusCode) {
+            var rows = document.querySelectorAll('.status-' + statusCode);
+            rows.forEach(row => {
+                row.style.display = row.style.display === 'none' ? '' : 'none';
+            });
+        }
+    </script>
+
+    <link href="https://riclandb.riclan.com.br/cdn/css/bootstrap.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100" style="background: #343a40 !important; ">
+    <header>
+        <nav style="background: black !important; " class="navbar navbar-expand-md navbar-dark fixed-top">
+            <div class="container-fluid">
+                <img width="64" src="https://riclandb.riclan.com.br/cdn/images/logoPNG.png" alt="Logo">
+                <a class="navbar-brand" style="padding-left: 15px;">GTIN Web</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link active" href="/listagem">Listagem</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-shrink-0" style="padding: 60px 15px 0;">
+        <div class="p-2">
+            <div class="d-flex justify-content-between align-items-center p-2">
+                <div>
+                    <h2 class="text-light">Lista Produtos x Codigo de Barras</h2>
+                    <form method="#" action="">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-dark text-white border border-secondary" id="basic-addon1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            </span>
+                            <input onkeyup="pesquisar_()" id="pesquisar" type="text" name="pesquisar" class="border border-secondary form-control bg-dark text-white" placeholder="Pesquisar por Nome, Item etc..." aria-label="Pesquisar">
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="border bg-light-subtle text-light p-2 align-items-center rounded">
+                    <label><input type="checkbox" id="ean13_check" onclick="filterTable()" checked> Mostrar <b>EAN13</b></label>
+                    <label><input type="checkbox" id="dun14_check" onclick="filterTable()" checked> Mostrar <b>DUN14</b></label>
+                    <br>
+                    <label><input type="checkbox" onclick="toggleStatus('9490')" checked> Mostar Existentes</label>
+                    <label><input type="checkbox" onclick="toggleStatus('9495')" checked> Mostar Sit Invalida</label>
+                    <label><input type="checkbox" onclick="toggleStatus('9494')" checked> Mostar Inexistente</label>
+                    <label><input type="checkbox" onclick="toggleStatus('9492')" checked> Mostar Prefixo Invalido</label>
+                </div>
+            </div>
+
+            {% if mensagem_gtin %}
+                {{ mensagem_gtin|safe }}
+            {% endif %}
+
+            <table class="table table-dark table-striped border rounded border-secondary">
+                <thead>
+                    <tr>
+                        <!--<th>ID</th>-->
+                        <th>Empresa</th>
+                        <th>Item</th>
+                        <th>Denominação do Item</th>
+                        <th>Tip Código de Barra</th>
+                        <th>Código de Barra</th>
+                        <th>Código de Barra Tributário</th>
+                        <th>Status</th>
+                        <th>NCM</th>
+                        <th>CEST</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ean13, gtin in ean13_data %}
+                    {% set status_code = gtin.status.split(' - ')[0] if gtin else 'Desconhecido' %}
+                    <tr class="ean13_row status-{{ status_code }}">
+                        <!--<td>{{ ean13.id }}</td>-->
+                        <td>{{ ean13.empresa }}</td>
+                        <td>{{ ean13.item }}</td>
+                        <td>{{ ean13.den_item }}</td>
+                        <td>{{ ean13.tip_cod_barra }}</td>
+                        <td>{{ ean13.cod_barra or '' }}</td>
+                        <td>{{ ean13.cod_barra_trib or '' }}</td>
+                        <td>{{ gtin.status if gtin else 'N/E' }}</td>
+                        <td>{{ gtin.ncm or '' if gtin else 'N/E' }}</td>
+                        <td>{{ gtin.cest or '' if gtin else 'N/E' }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% for dun14, gtin in dun14_data %}
+                    {% set status_code = gtin.status.split(' - ')[0] if gtin else 'Desconhecido' %}
+                    <tr class="dun14_row status-{{ status_code }}">
+                        <!--<td>{{ dun14.id }}</td>-->
+                        <td>{{ dun14.empresa }}</td>
+                        <td>{{ dun14.item }}</td>
+                        <td>{{ dun14.den_item }}</td>
+                        <td>{{ dun14.tip_cod_barra }}</td>
+                        <td>{{ dun14.cod_barra or '' }}</td>
+                        <td>{{ dun14.cod_barra_trib or '' }}</td>
+                        <td>{{ gtin.status if gtin else 'N/E' }}</td>
+                        <td>{{ gtin.ncm or '' if gtin else 'N/E' }}</td>
+                        <td>{{ gtin.cest or '' if gtin else 'N/E' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="container">
+        <footer class="py-3 my-4">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="https://chamados.riclan.com.br/glpi" target="_blank" class="nav-link px-2" style="color: #93989d;">Chamados T.I</a></li>
+            <li class="nav-item"><a href="https://riclandb.riclan.com.br/riclan/open.do?sys=MCP" target="_blank" class="nav-link px-2" style="color: #93989d;">Central Portais</a></li>
+          </ul>
+          <p class="text-center text-white">© 2024 Gabriel</p>
+        </footer>
+      </div>
+</body>
+</html>
